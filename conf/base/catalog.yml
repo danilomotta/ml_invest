@@ -65,7 +65,7 @@ ibov_urls:
     filename_suffix: .txt
 
 ibov_csv:
-    type: kedro.io.IncrementalDataSet
+    type: kedro.io.PartitionedDataSet
     path: data/01_raw/ibov_csv/
     dataset: pandas.CSVDataSet
     filename_suffix: .csv
@@ -75,3 +75,11 @@ ibov_dataset:
     path: data/01_raw/ibov_data/
     dataset: pandas.CSVDataSet
     filename_suffix: .csv
+
+last_updated: 
+    type: kedro.extras.datasets.text.TextDataSet
+    filepath: data/01_raw/last_updated
+
+updated:
+    type: kedro.extras.datasets.text.TextDataSet
+    filepath: data/01_raw/last_updated

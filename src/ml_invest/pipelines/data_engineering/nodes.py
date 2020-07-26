@@ -35,18 +35,15 @@ from typing import Any, Dict
 
 import pandas as pd
 from kedro.io import PartitionedDataSet, DataCatalog
+from datetime import datetime
 
-ibov_cols = {'data_pregao', 'cod_bdi', 'cod_papel', 'tp_merc', 'nome_resum',
-            'espec_papel', 'prazo_dias_termo', 'moeda','preco_abertura',
-            'preco_maximo', 'preco_minimo', 'preco_medio', 'preco_ultimo', 
-            'preco_melhor_compra', 'preco_melhor_venda', 'num_negocios', 
-            'qtde_titulos', 'vol_titulos', 'preco_exerc', 'indicador_correcao', 
-            'data_vencimento', 'fator_cotacao', 'preco_exerc_pontos', 'cod_isi', 
-            'distribuicao_papel'}
-
-def invalidate_last_partition(data):
-    print(data)
-    pass
+# ibov_cols = {'data_pregao', 'cod_bdi', 'cod_papel', 'tp_merc', 'nome_resum',
+#             'espec_papel', 'prazo_dias_termo', 'moeda','preco_abertura',
+#             'preco_maximo', 'preco_minimo', 'preco_medio', 'preco_ultimo', 
+#             'preco_melhor_compra', 'preco_melhor_venda', 'num_negocios', 
+#             'qtde_titulos', 'vol_titulos', 'preco_exerc', 'indicador_correcao', 
+#             'data_vencimento', 'fator_cotacao', 'preco_exerc_pontos', 'cod_isi', 
+#             'distribuicao_papel'}
 
 # def split_data(data: pd.DataFrame, example_test_data_ratio: float) -> Dict[str, Any]:
 #     """Node for splitting the classical Iris data set into training and test

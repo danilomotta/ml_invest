@@ -34,7 +34,7 @@ Delete this when you start working on your own Kedro project.
 
 from kedro.pipeline import Pipeline, node
 
-# from .nodes import invalidate_last_partition
+# from .nodes import data_extracted
 from .node_ibov import get_ibov_urls, get_ibov_data, get_timeline
 
 # def create_pipeline(**kwargs):
@@ -70,11 +70,11 @@ def create_pipeline(**kwargs):
             ),
             node(
                 func=get_ibov_data,
-                inputs="ibov_urls",
-                outputs="ibov_csv",
+                inputs=["ibov_urls", "last_updated"],
+                outputs=["ibov_csv", "updated"],
                 name="get_ibov_data",
                 confirms="ibov_urls"
-            ),
+            )
             # node(
             #     func=agg_ibov_hist,
             #     inputs="ibov_hist",
