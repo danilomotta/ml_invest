@@ -70,11 +70,11 @@ ibov_csv:
     dataset: pandas.CSVDataSet
     filename_suffix: .csv
 
-ibov_dataset:
-    type: kedro.io.IncrementalDataSet
-    path: data/01_raw/ibov_data/
-    dataset: pandas.CSVDataSet
-    filename_suffix: .csv
+# ibov_dataset:
+#     type: kedro.io.IncrementalDataSet
+#     path: data/01_raw/ibov_data/
+#     dataset: pandas.CSVDataSet
+#     filename_suffix: .csv
 
 last_updated: 
     type: kedro.extras.datasets.text.TextDataSet
@@ -83,3 +83,19 @@ last_updated:
 updated:
     type: kedro.extras.datasets.text.TextDataSet
     filepath: data/01_raw/last_updated
+
+ibov_dataset:
+    filepath: data/01_raw/ibov_agg/ibov_dataset.hdf
+    type: kedro.extras.datasets.pandas.HDFDataSet
+    key: 'data'
+    save_args:
+        mode: a
+    # versioned: True
+
+# ibov_dataset:
+#     filepath: data/01_raw/ibov_agg/ibov_dataset.csv
+#     type: pandas.CSVDataSet
+#     save_args:
+#         mode: a
+#         header: True
+#         index: False

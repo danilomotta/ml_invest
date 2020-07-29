@@ -35,23 +35,7 @@ Delete this when you start working on your own Kedro project.
 from kedro.pipeline import Pipeline, node
 
 # from .nodes import data_extracted
-from .node_ibov import get_ibov_urls, get_ibov_data, get_timeline
-
-# def create_pipeline(**kwargs):
-#     return Pipeline(
-#         [
-#             node(
-#                 split_data,
-#                 ["example_iris_data", "params:example_test_data_ratio"],
-#                 dict(
-#                     train_x="example_train_x",
-#                     train_y="example_train_y",
-#                     test_x="example_test_x",
-#                     test_y="example_test_y",
-#                 ),
-#             )
-#         ]
-#     )
+from .node_ibov import get_ibov_urls, get_ibov_data, get_timeline, agg_ibov_csv
 
 def create_pipeline(**kwargs):
     return Pipeline(
@@ -71,15 +55,16 @@ def create_pipeline(**kwargs):
             node(
                 func=get_ibov_data,
                 inputs=["ibov_urls", "last_updated"],
-                outputs=["ibov_csv", "updated"],
+                outputs="ibov_csv",
                 name="get_ibov_data",
                 confirms="ibov_urls"
+            ),
+            node(
+                func=agg_ibov_csv,
+                inputs=["ibov_csv", "last_updated"],
+                outputs=["ibov_dataset", "updated"],
+                name="agg_ibov_hist",
+                # confirms="ibov_csv"
             )
-            # node(
-            #     func=agg_ibov_hist,
-            #     inputs="ibov_hist",
-            #     outputs="ibov_dataset",
-            #     name="agg_ibov_hist"
-            # )
         ]
     )
