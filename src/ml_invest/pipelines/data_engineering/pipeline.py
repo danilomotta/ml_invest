@@ -48,7 +48,7 @@ def create_pipeline(**kwargs):
             ),
             node(
                 func=get_ibov_urls,
-                inputs="timeline",
+                inputs=["timeline", "params:data_url", "params:ibov_file"],
                 outputs="ibov_urls",
                 name="get_ibov_urls"
             ),

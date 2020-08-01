@@ -1,10 +1,12 @@
 # Here you can define all your data sets by using simple YAML syntax.
 #
 # Documentation for this file format can be found in "The Data Catalog"
-# Link: https://kedro.readthedocs.io/en/stable/04_user_guide/04_data_catalog.html
+# Link: 
+#   https://kedro.readthedocs.io/en/stable/04_user_guide/04_data_catalog.html
 
 #
-# We support interacting with a variety of data stores including local file systems, cloud, network and HDFS
+# We support interacting with a variety of data stores including local file 
+# systems, cloud, network and HDFS
 #
 # An example data set definition can look as follows:
 #
@@ -36,27 +38,14 @@
 #    # if_exists: 'fail'
 #    # if_exists: 'append'
 #
-# The Data Catalog supports being able to reference the same file using two different DataSet implementations
-# (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
+# The Data Catalog supports being able to reference the same file using two 
+# different DataSet implementations (transcoding), templating and a way to 
+# reuse arguments that are frequently repeated. See more here:
 # https://kedro.readthedocs.io/en/stable/04_user_guide/04_data_catalog.html
 #
-# This is a data set used by the "Hello World" example pipeline provided with the project
-# template. Please feel free to remove it once you remove the example pipeline.
-
-# example_iris_data:
-#   type: pandas.CSVDataSet
-#   filepath: data/01_raw/iris.csv
-
-# ibov_hist:
-#     type: pandas.CSVDataSet
-#     filepath: data/02_intermediate/ibov_hist.csv
-
-# ibov_hist:   
-#     type: kedro.contrib.io.pyspark.SparkDataSet
-#     filepath: "data/02_intermediate/ibov_hist"
-#     file_format: json
-#     load_args:
-#       multiline: True
+# This is a data set used by the "Hello World" example pipeline provided with 
+# the project template. Please feel free to remove it once you remove the 
+# example pipeline.
 
 ibov_urls:
     type: kedro.io.IncrementalDataSet
@@ -70,12 +59,6 @@ ibov_csv:
     dataset: pandas.CSVDataSet
     filename_suffix: .csv
 
-# ibov_dataset:
-#     type: kedro.io.IncrementalDataSet
-#     path: data/01_raw/ibov_data/
-#     dataset: pandas.CSVDataSet
-#     filename_suffix: .csv
-
 last_updated: 
     type: kedro.extras.datasets.text.TextDataSet
     filepath: data/01_raw/last_updated
@@ -85,17 +68,18 @@ updated:
     filepath: data/01_raw/last_updated
 
 ibov_dataset:
-    filepath: data/01_raw/ibov_agg/ibov_dataset.hdf
-    type: kedro.extras.datasets.pandas.HDFDataSet
-    key: 'data'
-    save_args:
-        mode: a
-    # versioned: True
+    filepath: data/01_raw/ibov_agg/ibov_dataset.csv
+    type: ml_invest.io.appendable_csv_dataset.AppendableCSVDataSet
+
+# ibov_dataset:
+#     filepath: data/01_raw/ibov_agg/ibov_dataset.hdf
+#     type: kedro.extras.datasets.pandas.HDFDataSet
+#     key: 'data'
+#     versioned: True
 
 # ibov_dataset:
 #     filepath: data/01_raw/ibov_agg/ibov_dataset.csv
 #     type: pandas.CSVDataSet
 #     save_args:
 #         mode: a
-#         header: True
 #         index: False

@@ -1,64 +1,110 @@
 from typing import Dict
 import urllib.request as url
+from kedro.extras.datasets.pandas import CSVDataSet
 from .parser.bovesparser import BovesParser
 from pathlib import Path
-from kedro.extras.datasets.pandas import JSONDataSet
 import pandas as pd
 from typing import Callable
 import zipfile
 from datetime import datetime
-from kedro import io
 import os
 
-data_url = "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/"
-ibov_filename = "COTAHIST_A"
+def get_todays_date() -> str: 
+    """Get todays date in year-month-day string formar
 
-ibov_cols = {"data_pregao", "cod_papel", "nome_resum", "prazo_dias_termo", 
-            "moeda","preco_abertura", "preco_maximo", "preco_minimo",
-            "preco_medio", "preco_ultimo", "preco_melhor_compra",
-            "preco_melhor_venda", "num_negocios", "qtde_titulos", "vol_titulos",
-            "preco_exerc", "indicador_correcao", "fator_cotacao", 
-            "preco_exerc_pontos"}
-
-def get_todays_date():
+    Returns:
+        str: todays date
+    """
     date = datetime.now()
     date_time = date.strftime("%Y-%m-%d")
     return date_time
 
 def get_timeline(from_year: int) -> Dict[str, str]:
+    """Returns a dictionary where the keys are years from_year to this year
+
+    Args:
+        from_year (int): inicial year of the range
+
+    Returns:
+        Dict[str, str]: a empty dictionary with the years as keys
+    """
     data = {}
     to_year = datetime.now().year
     for year in range(from_year, to_year+1):
         data[f"year={year}"] = ""
     return data
 
-def get_ibov_url(year: str):
-    file = ibov_filename + year + ".ZIP"
+def get_ibov_url(year: str, data_url: str, ibov_file: str) -> str:
+    """Given a year returns the url to download the ibov data
+
+    Args:
+        year (str): year of the dataset
+        data_url (str): url where the dataset is available
+        ibov_file (str): file name
+
+    Returns:
+        str: ibov url to download the file
+    """
+    file = ibov_file + year + ".ZIP"
     req_url = data_url + file
     return req_url
 
-def get_ibov_urls(timeline: Dict[str, str]) -> Dict[str, str]:
+def get_ibov_urls(timeline: Dict[str, str], data_url: str, ibov_file: str) -> Dict[str, str]:
+    """Iterate over the years and return a dictionary where the key is the year
+    and return a url to download the dataset in the "year" reference
+
+    Args:
+        timeline (Dict[str, str]): input dict with the years to download
+        data_url (str): url of the ibov dataset
+        ibov_file (str): pattern of the filename
+
+    Returns:
+        Dict[str, str]: urls to download the dataset partitions
+    """
     data = timeline
     for year in timeline.keys():
-        data[year] = get_ibov_url(year[-4:])
+        data[year] = get_ibov_url(year[-4:], data_url, ibov_file)
     return data
 
-def get_raw_path():
+def get_raw_path() -> str:
+    """Get the path where the raw data is kept
+
+    Returns:
+        str: path
+    """
     proj_path = Path.cwd()  # point back to the root of the project
     raw_path = proj_path.joinpath("data/01_raw")
     return str(raw_path.resolve())
 
-def update_if_outdated(last_updated: Dict[str, str], df: pd.DataFrame):
+def update_if_outdated(last_updated: Dict[str, str], df: pd.DataFrame) -> pd.DataFrame:
+    """Update the data partitions in df if our data is outdated
+
+    Args:
+        last_updated (Dict[str, str]): data of the last update
+        df (pd.DataFrame): DataFrame with the dataset partition list
+
+    Returns:
+        pd.DataFrame: dataframe with the partitions of data
+    """
     today = datetime.now()
     today = datetime(today.year, today.month, today.day)
 
-    last_date = datetime.strptime(last_updated, "%d/%m/%Y")
+    last_date = datetime.strptime(last_updated, "%Y-%m-%d")
     if today > last_date:
         year = today.strftime("%Y")
         df[f"year={year}"] = get_ibov_url(year)
     return df
 
 def get_ibov_data(ibov_urls: Dict[str, str], last_updated: str) -> Dict[str, str]:
+    """Download the partitions of the dataset if not already downloaded
+
+    Args:
+        ibov_urls (Dict[str, str]): partition x url to be downloaded
+        last_updated (str): date of the last update
+
+    Returns:
+        Dict[str, str]: the downloaded data
+    """
     data = ibov_urls
     path = get_raw_path()
     ibov_urls = update_if_outdated(last_updated, ibov_urls)
@@ -78,6 +124,16 @@ def get_ibov_data(ibov_urls: Dict[str, str], last_updated: str) -> Dict[str, str
     return data
 
 def clean_extract(file: str, path: str) -> pd.DataFrame:
+    """Extract a zip files containing a IBOV TXT, convert it to DataFranme
+    and deletes the temp files
+
+    Args:
+        file (str): file to extract
+        path (str): path of the file
+
+    Returns:
+        pd.DataFrame: DataFrame with the data
+    """
     with open(os.path.join(path, file), "rb") as zipdata:
         data = zipfile.ZipFile(zipdata)
         zipinfos = data.infolist()
@@ -97,6 +153,15 @@ def clean_extract(file: str, path: str) -> pd.DataFrame:
     return df
 
 def data_to_csv(file: str, path: str) -> pd.DataFrame:
+    """Converts the data in the IBOV TXT to DataFrame using BovesParser
+
+    Args:
+        file (str): file name
+        path (str): file path
+
+    Returns:
+        pd.DataFrame: data extracted
+    """
     parser = BovesParser(os.path.join(path, file))
     parser.ler_arquivo()
     parser.exportar_csv(os.path.join(path, "temp.csv"))
@@ -105,23 +170,39 @@ def data_to_csv(file: str, path: str) -> pd.DataFrame:
     return df
 
 def agg_ibov_csv(ibov_csv: Dict[str, Callable[[], pd.DataFrame]], 
-                 last_updated: str) -> pd.DataFrame:
+                 last_updated: str) -> Tuple[pd.DataFrame, str]:
+    """Aggragate all data from the partitions collected in a singe CSV
+
+    Args:
+        ibov_csv (Dict[str, Callable[[], pd.DataFrame]]): input data loader
+        last_updated (str): date of the last update
+
+    Returns:
+        pd.DataFrame: aggragated 
+    """
     concattable = []
+    today = get_todays_date()
     for partition, load_csv in ibov_csv.items():
-        if int(partition[-4:]) < int(last_updated[-4:]):
+        if int(partition[-4:]) < int(last_updated[:4]):
             print(f"Partition already extracted: {partition}")
             continue
+        elif today > last_updated:
+            print(f"Getting new data: {partition}")
+            csv = load_csv()
+            csv = csv.loc[:, ["data_pregao", "cod_papel",
+                            "preco_ultimo", "num_negocios"]]
+            csv = csv.loc[csv.data_pregao > last_updated, :]
+            concattable.append(csv)
         else:
-            print(f"Updating partition: {partition}")
-        csv = load_csv()
-        csv = csv.loc[:, ["data_pregao", "cod_papel",
-                          "preco_ultimo", "num_negocios"]]
-        csv = csv.loc[csv.data_pregao > last_updated, :]
-        concattable.append(csv)
+            print(f"Partition already extracted today: {partition}")
 
-    print("Concat started")
-    ret = pd.concat(concattable)
-    ret = ret.drop_duplicates()
-    print(f"Writing: {csv.shape}")
-    print(f"Size: {csv.info(memory_usage='deep')}")
-    return ret, get_todays_date()
+    if concattable:
+        ret = pd.concat(concattable)
+        ret = ret.drop_duplicates()
+        print(f"New data collected: {ret.shape[0]}")
+        return ret, get_todays_date()
+    else:
+        return pd.DataFrame(), today
+
+    # print(f"Size: {csv.info(memory_usage='deep')}")
+    
