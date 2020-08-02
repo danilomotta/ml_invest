@@ -35,7 +35,7 @@ Delete this when you start working on your own Kedro project.
 from kedro.pipeline import Pipeline, node
 
 # from .nodes import data_extracted
-from .node_ibov import get_ibov_urls, get_ibov_data, get_timeline, agg_ibov_csv
+from .nodes_ibov import get_ibov_urls, get_ibov_data, get_timeline, agg_ibov_csv
 
 def create_pipeline(**kwargs):
     return Pipeline(
