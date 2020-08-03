@@ -6,8 +6,10 @@
 # example_learning_rate: 0.01
 
 ibov_from_year: 2000
-ibov_file: "COTAHIST_A"
-data_url: "http://bvmf.bmfbovespa.com.br/InstDados/SerHist/"
+
+ibov_link: {"file":"COTAHIST_A",
+            "url":"http://bvmf.bmfbovespa.com.br/InstDados/SerHist/"}
+
 ibov_cols: {"data_pregao", "cod_papel", "nome_resum", "prazo_dias_termo", 
             "moeda","preco_abertura", "preco_maximo", "preco_minimo",
             "preco_medio", "preco_ultimo", "preco_melhor_compra",

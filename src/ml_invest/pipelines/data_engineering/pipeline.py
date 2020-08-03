@@ -48,13 +48,13 @@ def create_pipeline(**kwargs):
             ),
             node(
                 func=get_ibov_urls,
-                inputs=["timeline", "params:data_url", "params:ibov_file"],
+                inputs=["timeline", "params:ibov_link"],
                 outputs="ibov_urls",
                 name="get_ibov_urls"
             ),
             node(
                 func=get_ibov_data,
-                inputs=["ibov_urls", "last_updated"],
+                inputs=["ibov_urls", "last_updated",  "params:ibov_link"],
                 outputs="ibov_csv",
                 name="get_ibov_data",
                 confirms="ibov_urls"
