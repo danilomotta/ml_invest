@@ -57,9 +57,6 @@ kedro run
 To change the running parameters edit the file conf/base/parameters.yml.
 There you can set the starting date of the historical data.
 
-<> (## API documentation)
-
-<> (Documentation by opening `docs/build/html/index.html`.)
 
 ## Special thanks
 To @diogolr for the B3 parser code. Newer versions at https://github.com/diogolr/b3parser.
