@@ -6,6 +6,10 @@ next updates just download what is missing.
 
 Analysis of the correlation of stocks is still a work in progress.
 
+## Future works
+
+ETL on the CVM funds data and some machine learning fun on stocks and funds.
+
 ## To run this project
 
 ### Create a virtualenv of your preference, example:
