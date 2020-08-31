@@ -1,14 +1,36 @@
 # ML Invest
 
-This project is intended to download updated data of B3 stocks. 
+This is a work in progress.
+
+ML Invest right now can be used to download updated data of B3 stocks.
 The first run should last long because is downloading the historical data but
-next updates just download what is missing.
+subsequent runs download only the missing data.
 
-Analysis of the correlation of stocks is still a work in progress.
+This project should evolve to use machine learning to select/filter 
+investments that would be interesting to analyze given an input portfolio.
 
-## Future works
+Important: this project output should not be considered investment recommendations. 
+It's only a personal project that I think is interesting. :)
 
-ETL on the CVM funds data and some machine learning fun on stocks and funds.
+## The road so far and ahead
+
+✔ My own AppendableCSVDataSet
+
+☐ Data extraction
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✔ B3 stocks
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ☐ CVM Funds
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ☐ S&P500
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ☐ Others?
+
+☐ Correlation analysis for investment portfolio
+
+☐ Investment selection using ML considering a portfolio already set.
+
+Next: ETL on the CVM funds data and some machine learning fun on stocks and funds.
 
 ## To run this project
 
