@@ -208,6 +208,4 @@ def agg_ibov_csv(ibov_csv: Dict[str, Callable[[], pd.DataFrame]],
         return ret, get_todays_date()
     else:
         return pd.DataFrame(), today
-
-    # print(f"Size: {csv.info(memory_usage='deep')}")
     
