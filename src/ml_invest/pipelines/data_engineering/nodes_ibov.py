@@ -26,7 +26,7 @@ def get_timeline(from_year: int) -> Dict[str, str]:
         from_year (int): inicial year of the range
 
     Returns:
-        Dict[str, str]: a empty dictionary with the years as keys
+        Dict[str, str]: an empty dictionary containing the years as keys
     """
     data = {}
     to_year = datetime.now().year
@@ -38,8 +38,8 @@ def get_ibov_url(year: str, ibov_link: Dict[str, str]) -> str:
     """Given a year returns the url to download the ibov data
 
     Args:
-        year (str): year of the dataset
-        ibov_link (Dict[str, str]): Dict with the dataset url and file name
+        year (str): reference year of the dataset to download
+        ibov_link (Dict[str, str]): Dict of the dataset url and file name
 
     Returns:
         str: ibov url to download the file
@@ -53,8 +53,8 @@ def get_ibov_urls(timeline: Dict[str, str], ibov_link: Dict[str, str]) -> Dict[s
     and return a url to download the dataset in the "year" reference
 
     Args:
-        timeline (Dict[str, str]): input dict with the years to download
-        ibov_link (Dict[str, str]): Dict with the dataset url and file name
+        timeline (Dict[str, str]): input dict containing the data years to be downloaded
+        ibov_link (Dict[str, str]): Dict of the dataset url and file name
 
     Returns:
         Dict[str, str]: urls to download the dataset partitions
@@ -81,7 +81,7 @@ def update_if_outdated(last_updated: Dict[str, str], df: pd.DataFrame,
     Args:
         last_updated (Dict[str, str]): data of the last update
         df (pd.DataFrame): DataFrame with the dataset partition list
-        ibov_link (Dict[str, str]): Dict with the dataset url and file name
+        ibov_link (Dict[str, str]): Dict of the dataset url and file name
 
     Returns:
         pd.DataFrame: dataframe with the partitions of data
@@ -102,7 +102,7 @@ def get_ibov_data(ibov_urls: Dict[str, str], last_updated: str,
     Args:
         ibov_urls (Dict[str, str]): partition x url to be downloaded
         last_updated (str): date of the last update
-        ibov_link (Dict[str, str]): Dict with the dataset url and file name
+        ibov_link (Dict[str, str]): Dict of the dataset url and file name
 
     Returns:
         Dict[str, str]: the downloaded data
