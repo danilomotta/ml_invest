@@ -1,4 +1,4 @@
-# ML Invest
+# <img src="assets/logo.png" width="50px"> ML Invest
 
 This is a work in progress.
 
