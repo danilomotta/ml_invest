@@ -194,8 +194,9 @@ def agg_ibov_csv(ibov_csv: Dict[str, Callable[[], pd.DataFrame]],
         elif today > last_updated:
             log.info(f"Getting new data: {partition}")
             csv = load_csv()
-            csv = csv.loc[:, ["data_pregao", "cod_papel",
-                            "preco_ultimo", "num_negocios"]]
+            columns = ["data_pregao", "cod_papel", "preco_abertura", "preco_maximo", 
+                       "preco_minimo", "preco_ultimo", "num_negocios"]
+            csv = csv.loc[:, columns]
             csv = csv.loc[csv.data_pregao > last_updated, :]
             concattable.append(csv)
         else:

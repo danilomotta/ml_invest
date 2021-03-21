@@ -12,3 +12,4 @@ pytest-mock>=1.7.1, <2.0
 pytest~=5.0
 wheel==0.32.2
 tqdm==4.48.0
+backtrader-1.9.76.123
